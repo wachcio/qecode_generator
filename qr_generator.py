@@ -88,7 +88,7 @@ def copy_to_clipboard(qr):
     with io.BytesIO() as output:
         qr.save(output, format="PNG")
         data = output.getvalue()
-    
+
     # Copy image to clipboard
     try:
         image = Image.open(io.BytesIO(data))
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     security_label = tk.Label(wifi_tab, text="Security Type:")
     security_label.pack(anchor=tk.W)
-    security_var = tk.StringVar(value="WPA")
+    security_var = tk.StringVar(value="WPA2")
     security_options = ["WPA", "WPA2", "WPA3", "WEP", "nopass"]
     security_menu = tk.OptionMenu(wifi_tab, security_var, *security_options)
 
