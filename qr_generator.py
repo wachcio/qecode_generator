@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, filedialog
 import tkinter.ttk as ttk
 import qrcode
-from PIL import Image, ImageTk, ImageGrab
+from PIL import Image, ImageTk
 import io
 
 qr_window = None  # Global variable to hold the QR window instance
@@ -90,14 +90,6 @@ def copy_to_clipboard(qr):
 
     # Copy image to clipboard
     try:
-        image = Image.open(io.BytesIO(data))
-        image.save("temp_qr.png")  # Save temporarily to copy to clipboard
-        img = Image.open("temp_qr.png")
-        img.show()  # This will open the image in the default viewer
-        # Use the clipboard functionality to copy the image
-        img = Image.open("temp_qr.png")
-        img = img.convert("RGBA")
-        img.save("temp_qr.png", "PNG")
         root = tk.Tk()
         root.withdraw()  # Hide the root window
         root.clipboard_clear()  # Clear the clipboard
