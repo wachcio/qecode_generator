@@ -161,6 +161,6 @@ if __name__ == "__main__":
     copy_button.pack(pady=10)
 
     qr_label = tk.Label(app)
-    qr_label.pack(pady=10)
+    qr_label.pack(side=tk.RIGHT, padx=10, pady=10)  # Changed to pack the QR code label to the right
 
     app.mainloop()
