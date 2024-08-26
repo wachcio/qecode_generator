@@ -16,6 +16,7 @@ def generate_qr():
             messagebox.showwarning("Warning", "Please enter some text")
             return None
         qr = qrcode.make(text)
+        qr_info = f"Text: {text}"
     elif current_tab == 1:  # WiFi tab
         ssid = ssid_entry.get()
         hide = hide_var.get()
@@ -26,8 +27,10 @@ def generate_qr():
             return None
         if security == "nopass":
             qr = qrcode.make(f"WIFI:T:{security};S:{ssid};H:{'true' if hide else 'false'};;")
+            qr_info = f"WiFi SSID: {ssid}, Security: {security}, Hidden: {hide}"
         else:
             qr = qrcode.make(f"WIFI:T:{security};S:{ssid};P:{password};H:{'true' if hide else 'false'};;")
+            qr_info = f"WiFi SSID: {ssid}, Password: {password}, Security: {security}, Hidden: {hide}"
     elif current_tab == 2:  # Contact tab
         contact_name = contact_entry.get()
         contact_surname = surname_entry.get()
@@ -40,10 +43,11 @@ def generate_qr():
             messagebox.showwarning("Warning", "Please enter contact name and surname")
             return None
         qr = qrcode.make(f"BEGIN:VCARD\nFN:{contact_name} {contact_surname}\nORG:{company}\nTEL:{phone}\nEMAIL:{email}\nBDAY:{birthday}\nADR:{address}\nEND:VCARD")
-    
-    show_qr_window(qr)  # Show QR code in a new window
+        qr_info = f"Contact: {contact_name} {contact_surname}, Phone: {phone}, Email: {email}"
 
-def show_qr_window(qr):
+    show_qr_window(qr, qr_info)  # Show QR code in a new window
+
+def show_qr_window(qr, qr_info):
     global qr_window
     if qr_window is None or not qr_window.winfo_exists():
         qr_window = tk.Toplevel(app)
@@ -53,6 +57,9 @@ def show_qr_window(qr):
         qr_label = tk.Label(qr_window, image=qr_image)
         qr_label.image = qr_image
         qr_label.pack(padx=10, pady=10)
+
+        info_label = tk.Label(qr_window, text=qr_info)
+        info_label.pack(pady=5)
 
         save_button = tk.Button(qr_window, text="Save QR Code", command=lambda: save_qr(qr))
         save_button.pack(pady=10)
@@ -64,6 +71,8 @@ def show_qr_window(qr):
         qr_image = ImageTk.PhotoImage(qr)
         qr_label.config(image=qr_image)
         qr_label.image = qr_image
+        info_label = qr_window.children['!label2']
+        info_label.config(text=qr_info)
 
 def save_qr(qr):
     if qr is None:
