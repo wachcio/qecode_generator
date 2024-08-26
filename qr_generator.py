@@ -69,6 +69,10 @@ if __name__ == "__main__":
     security_var = tk.StringVar(value="WPA")
     security_options = ["WPA", "WPA2", "WPA3", "WEP", "nopass"]
     security_menu = tk.OptionMenu(wifi_tab, security_var, *security_options)
+
+    password_label = tk.Label(wifi_tab, text="Password:")
+    password_entry = tk.Entry(wifi_tab, show="*", width=40)
+
     def toggle_password_field(*args):
         if security_var.get() == "nopass":
             password_entry.pack_forget()
@@ -77,15 +81,9 @@ if __name__ == "__main__":
             password_label.pack(anchor=tk.W)
             password_entry.pack(anchor=tk.W, padx=5)
 
-
     security_var.trace("w", toggle_password_field)
     security_menu.pack(anchor=tk.W)
     toggle_password_field()
-
-    password_label = tk.Label(wifi_tab, text="Password:")
-    password_label.pack(anchor=tk.W)
-    password_entry = tk.Entry(wifi_tab, show="*", width=40)
-    password_entry.pack(anchor=tk.W, padx=5)
 
     # Contact Tab
     contact_tab = ttk.Frame(notebook)
