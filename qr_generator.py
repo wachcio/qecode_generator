@@ -65,6 +65,8 @@ def show_qr_window(qr, qr_info):
 
         copy_button = tk.Button(qr_window, text="Copy to Clipboard", command=lambda: copy_to_clipboard(qr))
         copy_button.pack(pady=10)
+
+        qr_window.protocol("WM_DELETE_WINDOW", on_close)  # Handle window close event
     else:
         qr_label = qr_window.children['!label']
         qr_image = ImageTk.PhotoImage(qr)
@@ -105,6 +107,10 @@ def copy_to_clipboard(qr):
         messagebox.showinfo("Copied", "QR code copied to clipboard")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to copy image to clipboard: {e}")
+
+def on_close():
+    qr_window.destroy()  # Close the QR window
+    qr_window = None  # Reset the global variable
 
 if __name__ == "__main__":
     app = tk.Tk()
