@@ -94,9 +94,13 @@ def copy_to_clipboard(qr):
         root.withdraw()  # Hide the root window
         root.clipboard_clear()  # Clear the clipboard
         image = Image.open(io.BytesIO(data))
-        image.save(output, format="BMP")  # Save as BMP for clipboard compatibility
-        output.seek(0)
-        root.clipboard_append(output.getvalue())  # Append the image data to the clipboard
+        
+        # Save as BMP for clipboard compatibility
+        with io.BytesIO() as bmp_output:
+            image.save(bmp_output, format="BMP")
+            bmp_data = bmp_output.getvalue()
+        
+        root.clipboard_append(bmp_data)  # Append the image data to the clipboard
         root.update()  # Keep the clipboard updated
         messagebox.showinfo("Copied", "QR code copied to clipboard")
     except Exception as e:
