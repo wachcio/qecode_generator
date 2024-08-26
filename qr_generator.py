@@ -3,6 +3,7 @@ from tkinter import messagebox
 import tkinter.ttk as ttk
 import qrcode
 from PIL import Image, ImageTk
+import pyperclip
 
 def generate_qr():
     current_tab = notebook.index(notebook.select())
@@ -36,10 +37,22 @@ def generate_qr():
             messagebox.showwarning("Warning", "Please enter contact name and surname")
             return
         qr = qrcode.make(f"BEGIN:VCARD\nFN:{contact_name} {contact_surname}\nORG:{company}\nTEL:{phone}\nEMAIL:{email}\nBDAY:{birthday}\nADR:{address}\nEND:VCARD")
+    
     qr_image = ImageTk.PhotoImage(qr)
-
     qr_label.config(image=qr_image)
     qr_label.image = qr_image
+
+    return qr  # Return the QR code image for further use
+
+def save_qr(qr):
+    file_path = "qr_code.png"
+    qr.save(file_path)
+    messagebox.showinfo("Saved", f"QR code saved as {file_path}")
+
+def copy_to_clipboard(qr):
+    qr_bytes = qr.tobytes()
+    pyperclip.copy(qr_bytes)
+    messagebox.showinfo("Copied", "QR code copied to clipboard")
 
 if __name__ == "__main__":
     app = tk.Tk()
@@ -130,8 +143,11 @@ if __name__ == "__main__":
     address_entry = tk.Entry(contact_tab, width=40)
     address_entry.pack(anchor=tk.W, padx=5)
 
-    generate_button = tk.Button(app, text="Generate", command=generate_qr)
+    generate_button = tk.Button(app, text="Generate", command=lambda: save_qr(generate_qr()))
     generate_button.pack(pady=10)
+
+    copy_button = tk.Button(app, text="Copy to Clipboard", command=lambda: copy_to_clipboard(generate_qr()))
+    copy_button.pack(pady=10)
 
     qr_label = tk.Label(app)
     qr_label.pack(pady=10)
