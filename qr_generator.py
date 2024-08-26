@@ -88,13 +88,15 @@ def copy_to_clipboard(qr):
     with io.BytesIO() as output:
         qr.save(output, format="PNG")
         data = output.getvalue()
-    pyperclip.copy(data)
-    messagebox.showinfo("Copied", "QR code copied to clipboard")
-
-    # Now we will also copy the image to the clipboard
+    
+    # Copy image to clipboard
     try:
         image = Image.open(io.BytesIO(data))
-        image.show()  # This will show the image in the default image viewer
+        output = io.BytesIO()
+        image.save(output, format="PNG")
+        output.seek(0)
+        pyperclip.copy(output.getvalue())
+        messagebox.showinfo("Copied", "QR code copied to clipboard")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to copy image to clipboard: {e}")
 
