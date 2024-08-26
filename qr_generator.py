@@ -94,7 +94,15 @@ def copy_to_clipboard(qr):
         image.save("temp_qr.png")  # Save temporarily to copy to clipboard
         img = Image.open("temp_qr.png")
         img.show()  # This will open the image in the default viewer
-        ImageGrab.grabclipboard()  # Grab the clipboard
+        # Use the clipboard functionality to copy the image
+        img = Image.open("temp_qr.png")
+        img = img.convert("RGBA")
+        img.save("temp_qr.png", "PNG")
+        root = tk.Tk()
+        root.withdraw()  # Hide the root window
+        root.clipboard_clear()  # Clear the clipboard
+        root.clipboard_append(data)  # Append the image data to the clipboard
+        root.update()  # Keep the clipboard updated
         messagebox.showinfo("Copied", "QR code copied to clipboard")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to copy image to clipboard: {e}")
