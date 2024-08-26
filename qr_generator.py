@@ -63,8 +63,9 @@ def show_qr_window(qr, qr_info):
         save_button = tk.Button(qr_window, text="Save QR Code", command=lambda: save_qr(qr))
         save_button.pack(pady=10)
 
-        copy_button = tk.Button(qr_window, text="Copy to Clipboard", command=lambda: copy_to_clipboard(qr))
-        copy_button.pack(pady=10)
+        # Zakomentowane wywołanie funkcji kopiowania i przycisk
+        # copy_button = tk.Button(qr_window, text="Copy to Clipboard", command=lambda: copy_to_clipboard(qr))
+        # copy_button.pack(pady=10)
 
         qr_window.protocol("WM_DELETE_WINDOW", on_close)  # Handle window close event
     else:
