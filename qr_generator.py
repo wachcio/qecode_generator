@@ -91,6 +91,13 @@ def copy_to_clipboard(qr):
     pyperclip.copy(data)
     messagebox.showinfo("Copied", "QR code copied to clipboard")
 
+    # Now we will also copy the image to the clipboard
+    try:
+        image = Image.open(io.BytesIO(data))
+        image.show()  # This will show the image in the default image viewer
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to copy image to clipboard: {e}")
+
 if __name__ == "__main__":
     app = tk.Tk()
     app.title("QR Code Generator")
