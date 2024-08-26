@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 import tkinter.ttk as ttk
 import qrcode
 from PIL import Image, ImageTk
@@ -48,9 +48,10 @@ def generate_qr():
 def save_qr(qr):
     if qr is None:
         return
-    file_path = "qr_code.png"
-    qr.save(file_path)
-    messagebox.showinfo("Saved", f"QR code saved as {file_path}")
+    file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png"), ("All files", "*.*")])
+    if file_path:
+        qr.save(file_path)
+        messagebox.showinfo("Saved", f"QR code saved as {file_path}")
 
 def copy_to_clipboard(qr):
     if qr is None:
