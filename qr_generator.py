@@ -4,6 +4,7 @@ import tkinter.ttk as ttk
 import qrcode
 from PIL import Image, ImageTk
 import pyperclip
+import io
 
 def generate_qr():
     current_tab = notebook.index(notebook.select())
@@ -11,7 +12,7 @@ def generate_qr():
         text = text_entry.get()
         if not text:
             messagebox.showwarning("Warning", "Please enter some text")
-            return
+            return None
         qr = qrcode.make(text)
     elif current_tab == 1:  # WiFi tab
         ssid = ssid_entry.get()
@@ -20,7 +21,7 @@ def generate_qr():
         password = password_entry.get()
         if not ssid:
             messagebox.showwarning("Warning", "Please enter SSID")
-            return
+            return None
         if security == "nopass":
             qr = qrcode.make(f"WIFI:T:{security};S:{ssid};H:{'true' if hide else 'false'};;")
         else:
@@ -35,7 +36,7 @@ def generate_qr():
         address = address_entry.get()
         if not contact_name or not contact_surname:
             messagebox.showwarning("Warning", "Please enter contact name and surname")
-            return
+            return None
         qr = qrcode.make(f"BEGIN:VCARD\nFN:{contact_name} {contact_surname}\nORG:{company}\nTEL:{phone}\nEMAIL:{email}\nBDAY:{birthday}\nADR:{address}\nEND:VCARD")
     
     qr_image = ImageTk.PhotoImage(qr)
@@ -45,13 +46,19 @@ def generate_qr():
     return qr  # Return the QR code image for further use
 
 def save_qr(qr):
+    if qr is None:
+        return
     file_path = "qr_code.png"
     qr.save(file_path)
     messagebox.showinfo("Saved", f"QR code saved as {file_path}")
 
 def copy_to_clipboard(qr):
-    qr_bytes = qr.tobytes()
-    pyperclip.copy(qr_bytes)
+    if qr is None:
+        return
+    with io.BytesIO() as output:
+        qr.save(output, format="PNG")
+        data = output.getvalue()
+    pyperclip.copy(data)
     messagebox.showinfo("Copied", "QR code copied to clipboard")
 
 if __name__ == "__main__":
@@ -143,8 +150,11 @@ if __name__ == "__main__":
     address_entry = tk.Entry(contact_tab, width=40)
     address_entry.pack(anchor=tk.W, padx=5)
 
-    generate_button = tk.Button(app, text="Generate", command=lambda: save_qr(generate_qr()))
+    generate_button = tk.Button(app, text="Generate", command=generate_qr)
     generate_button.pack(pady=10)
+
+    save_button = tk.Button(app, text="Save QR Code", command=lambda: save_qr(generate_qr()))
+    save_button.pack(pady=10)
 
     copy_button = tk.Button(app, text="Copy to Clipboard", command=lambda: copy_to_clipboard(generate_qr()))
     copy_button.pack(pady=10)
