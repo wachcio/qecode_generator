@@ -109,6 +109,7 @@ def copy_to_clipboard(qr):
         messagebox.showerror("Error", f"Failed to copy image to clipboard: {e}")
 
 def on_close():
+    global qr_window  # Declare qr_window as global
     qr_window.destroy()  # Close the QR window
     qr_window = None  # Reset the global variable
 
