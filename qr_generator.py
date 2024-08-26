@@ -5,7 +5,10 @@ from PIL import Image, ImageTk
 
 def generate_qr():
     qr_type = qr_type_var.get()
-    text = entry.get()
+    text = entry.get() if qr_type != "wifi" else ssid_entry.get()
+    broadcast = broadcast_var.get()
+    security = security_var.get()
+    password = password_entry.get()
     if not text:
         messagebox.showwarning("Warning", "Please enter some text")
         return
@@ -13,7 +16,7 @@ def generate_qr():
     if qr_type == "text":
         qr = qrcode.make(text)
     elif qr_type == "wifi":
-        qr = qrcode.make(f"WIFI:T:WPA;S:{text};P:password;;")
+        qr = qrcode.make(f"WIFI:T:{security};S:{text};P:{password};H:{'true' if broadcast else 'false'};;")
     elif qr_type == "contact":
         qr = qrcode.make(f"BEGIN:VCARD\nFN:{text}\nEND:VCARD")
     else:
@@ -32,6 +35,27 @@ if __name__ == "__main__":
 
     frame = tk.Frame(app)
     frame.pack(padx=10, pady=10)
+
+    ssid_label = tk.Label(app, text="SSID:")
+    ssid_label.pack(anchor=tk.W)
+    ssid_entry = tk.Entry(app, width=40)
+    ssid_entry.pack(anchor=tk.W, padx=5)
+
+    broadcast_var = tk.BooleanVar()
+    broadcast_check = tk.Checkbutton(app, text="Broadcast SSID", variable=broadcast_var)
+    broadcast_check.pack(anchor=tk.W)
+
+    security_label = tk.Label(app, text="Security Type:")
+    security_label.pack(anchor=tk.W)
+    security_var = tk.StringVar(value="WPA")
+    security_options = ["WPA", "WEP", "nopass"]
+    security_menu = tk.OptionMenu(app, security_var, *security_options)
+    security_menu.pack(anchor=tk.W)
+
+    password_label = tk.Label(app, text="Password:")
+    password_label.pack(anchor=tk.W)
+    password_entry = tk.Entry(app, show="*", width=40)
+    password_entry.pack(anchor=tk.W, padx=5)
 
     entry = tk.Entry(frame, width=40)
     entry.pack(side=tk.LEFT, padx=5)
