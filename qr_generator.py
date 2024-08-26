@@ -6,6 +6,8 @@ from PIL import Image, ImageTk
 import pyperclip
 import io
 
+qr_window = None  # Global variable to hold the QR window instance
+
 def generate_qr():
     current_tab = notebook.index(notebook.select())
     if current_tab == 0:  # Text tab
@@ -42,19 +44,26 @@ def generate_qr():
     show_qr_window(qr)  # Show QR code in a new window
 
 def show_qr_window(qr):
-    qr_window = tk.Toplevel(app)
-    qr_window.title("Generated QR Code")
+    global qr_window
+    if qr_window is None or not qr_window.winfo_exists():
+        qr_window = tk.Toplevel(app)
+        qr_window.title("Generated QR Code")
 
-    qr_image = ImageTk.PhotoImage(qr)
-    qr_label = tk.Label(qr_window, image=qr_image)
-    qr_label.image = qr_image
-    qr_label.pack(padx=10, pady=10)
+        qr_image = ImageTk.PhotoImage(qr)
+        qr_label = tk.Label(qr_window, image=qr_image)
+        qr_label.image = qr_image
+        qr_label.pack(padx=10, pady=10)
 
-    save_button = tk.Button(qr_window, text="Save QR Code", command=lambda: save_qr(qr))
-    save_button.pack(pady=10)
+        save_button = tk.Button(qr_window, text="Save QR Code", command=lambda: save_qr(qr))
+        save_button.pack(pady=10)
 
-    copy_button = tk.Button(qr_window, text="Copy to Clipboard", command=lambda: copy_to_clipboard(qr))
-    copy_button.pack(pady=10)
+        copy_button = tk.Button(qr_window, text="Copy to Clipboard", command=lambda: copy_to_clipboard(qr))
+        copy_button.pack(pady=10)
+    else:
+        qr_label = qr_window.children['!label']
+        qr_image = ImageTk.PhotoImage(qr)
+        qr_label.config(image=qr_image)
+        qr_label.image = qr_image
 
 def save_qr(qr):
     if qr is None:
