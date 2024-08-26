@@ -39,11 +39,22 @@ def generate_qr():
             return None
         qr = qrcode.make(f"BEGIN:VCARD\nFN:{contact_name} {contact_surname}\nORG:{company}\nTEL:{phone}\nEMAIL:{email}\nBDAY:{birthday}\nADR:{address}\nEND:VCARD")
     
-    qr_image = ImageTk.PhotoImage(qr)
-    qr_label.config(image=qr_image)
-    qr_label.image = qr_image
+    show_qr_window(qr)  # Show QR code in a new window
 
-    return qr  # Return the QR code image for further use
+def show_qr_window(qr):
+    qr_window = tk.Toplevel(app)
+    qr_window.title("Generated QR Code")
+
+    qr_image = ImageTk.PhotoImage(qr)
+    qr_label = tk.Label(qr_window, image=qr_image)
+    qr_label.image = qr_image
+    qr_label.pack(padx=10, pady=10)
+
+    save_button = tk.Button(qr_window, text="Save QR Code", command=lambda: save_qr(qr))
+    save_button.pack(pady=10)
+
+    copy_button = tk.Button(qr_window, text="Copy to Clipboard", command=lambda: copy_to_clipboard(qr))
+    copy_button.pack(pady=10)
 
 def save_qr(qr):
     if qr is None:
@@ -153,14 +164,5 @@ if __name__ == "__main__":
 
     generate_button = tk.Button(app, text="Generate", command=generate_qr)
     generate_button.pack(pady=10)
-
-    save_button = tk.Button(app, text="Save QR Code", command=lambda: save_qr(generate_qr()))
-    save_button.pack(pady=10)
-
-    copy_button = tk.Button(app, text="Copy to Clipboard", command=lambda: copy_to_clipboard(generate_qr()))
-    copy_button.pack(pady=10)
-
-    qr_label = tk.Label(app)
-    qr_label.pack(side=tk.RIGHT, padx=10, pady=10)  # QR code label is packed to the right
 
     app.mainloop()
