@@ -2,8 +2,7 @@ import tkinter as tk
 from tkinter import messagebox, filedialog
 import tkinter.ttk as ttk
 import qrcode
-from PIL import Image, ImageTk
-import pyperclip
+from PIL import Image, ImageTk, ImageGrab
 import io
 
 qr_window = None  # Global variable to hold the QR window instance
@@ -92,10 +91,10 @@ def copy_to_clipboard(qr):
     # Copy image to clipboard
     try:
         image = Image.open(io.BytesIO(data))
-        output = io.BytesIO()
-        image.save(output, format="PNG")
-        output.seek(0)
-        pyperclip.copy(output.getvalue())
+        image.save("temp_qr.png")  # Save temporarily to copy to clipboard
+        img = Image.open("temp_qr.png")
+        img.show()  # This will open the image in the default viewer
+        ImageGrab.grabclipboard()  # Grab the clipboard
         messagebox.showinfo("Copied", "QR code copied to clipboard")
     except Exception as e:
         messagebox.showerror("Error", f"Failed to copy image to clipboard: {e}")
