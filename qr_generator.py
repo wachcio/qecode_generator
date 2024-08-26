@@ -26,10 +26,16 @@ def generate_qr():
             qr = qrcode.make(f"WIFI:T:{security};S:{ssid};P:{password};H:{'true' if hide else 'false'};;")
     elif current_tab == 2:  # Contact tab
         contact_name = contact_entry.get()
-        if not contact_name:
-            messagebox.showwarning("Warning", "Please enter contact name")
+        contact_surname = surname_entry.get()
+        company = company_entry.get()
+        phone = phone_entry.get()
+        email = email_entry.get()
+        birthday = birthday_entry.get()
+        address = address_entry.get()
+        if not contact_name or not contact_surname:
+            messagebox.showwarning("Warning", "Please enter contact name and surname")
             return
-        qr = qrcode.make(f"BEGIN:VCARD\nFN:{contact_name}\nEND:VCARD")
+        qr = qrcode.make(f"BEGIN:VCARD\nFN:{contact_name} {contact_surname}\nORG:{company}\nTEL:{phone}\nEMAIL:{email}\nBDAY:{birthday}\nADR:{address}\nEND:VCARD")
     qr_image = ImageTk.PhotoImage(qr)
 
     qr_label.config(image=qr_image)
@@ -93,6 +99,36 @@ if __name__ == "__main__":
     contact_label.pack(anchor=tk.W)
     contact_entry = tk.Entry(contact_tab, width=40)
     contact_entry.pack(anchor=tk.W, padx=5)
+
+    surname_label = tk.Label(contact_tab, text="Surname:")
+    surname_label.pack(anchor=tk.W)
+    surname_entry = tk.Entry(contact_tab, width=40)
+    surname_entry.pack(anchor=tk.W, padx=5)
+
+    company_label = tk.Label(contact_tab, text="Company:")
+    company_label.pack(anchor=tk.W)
+    company_entry = tk.Entry(contact_tab, width=40)
+    company_entry.pack(anchor=tk.W, padx=5)
+
+    phone_label = tk.Label(contact_tab, text="Phone:")
+    phone_label.pack(anchor=tk.W)
+    phone_entry = tk.Entry(contact_tab, width=40)
+    phone_entry.pack(anchor=tk.W, padx=5)
+
+    email_label = tk.Label(contact_tab, text="Email:")
+    email_label.pack(anchor=tk.W)
+    email_entry = tk.Entry(contact_tab, width=40)
+    email_entry.pack(anchor=tk.W, padx=5)
+
+    birthday_label = tk.Label(contact_tab, text="Birthday (YYYY-MM-DD):")
+    birthday_label.pack(anchor=tk.W)
+    birthday_entry = tk.Entry(contact_tab, width=40)
+    birthday_entry.pack(anchor=tk.W, padx=5)
+
+    address_label = tk.Label(contact_tab, text="Address:")
+    address_label.pack(anchor=tk.W)
+    address_entry = tk.Entry(contact_tab, width=40)
+    address_entry.pack(anchor=tk.W, padx=5)
 
     generate_button = tk.Button(app, text="Generate", command=generate_qr)
     generate_button.pack(pady=10)
