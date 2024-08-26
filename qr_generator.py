@@ -77,6 +77,11 @@ if __name__ == "__main__":
             password_label.pack(anchor=tk.W)
             password_entry.pack(anchor=tk.W, padx=5)
 
+    password_label = tk.Label(wifi_tab, text="Password:")
+    password_label.pack(anchor=tk.W)
+    password_entry = tk.Entry(wifi_tab, show="*", width=40)
+    password_entry.pack(anchor=tk.W, padx=5)
+
     security_var.trace("w", toggle_password_field)
     security_menu.pack(anchor=tk.W)
     toggle_password_field()
